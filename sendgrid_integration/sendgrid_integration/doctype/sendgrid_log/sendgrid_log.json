@@ -10,7 +10,8 @@
  "field_order": [
   "request_data",
   "api_response",
-  "status"
+  "status",
+  "resource_type"
  ],
  "fields": [
   {
@@ -26,12 +27,23 @@
   {
    "fieldname": "status",
    "fieldtype": "Select",
-   "label": "Status"
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "\nSuccess\nFailed\nPending"
+  },
+  {
+   "fieldname": "resource_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Resource Type",
+   "options": "\nContact\nList\nEmail"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-14 07:43:26.659421",
+ "modified": "2023-10-18 12:43:45.563999",
  "modified_by": "Administrator",
  "module": "Sendgrid Integration",
  "name": "SendGrid Log",
