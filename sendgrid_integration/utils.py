@@ -7,11 +7,9 @@ def create_list(doc,event):
     
     if doc.lead_source_id: #indicates that this list  is already existing
         return
-    frappe.log_error("Called")
     settings = frappe.get_doc("SendGrid Settings")
     if settings.enabled:
         api_key = settings.get_password("api_key")
-        sg = SendGridAPIClient(api_key)
 
         data = {
             "name": doc.name
@@ -24,17 +22,49 @@ def create_list(doc,event):
     
         #create a send grid log
         log = create_log(response,request_data=data,resource_type="List")
-        if response.status_code == 200:
+        if response.status_code == 201:
             response_data = response.json()
             doc.lead_source_id = response_data["id"]
-            
             log.status = "Success"
-            log.api_repsonse = json.dumps(response_data,indent=4)
+            log.api_response = json.dumps(response.json(),indent=4)
+            doc.save()
         else:
             log.status = "Failed"
             log.api_response = json.dumps(response.json(),indent=4)
-        log.save()
-        frappe.db.commit()
+        log.insert()
+
+def delete_list(doc,event):
+    """delete a lead souce list from send grid"""
+    
+    if doc.lead_source_id: #this list id
+        settings = frappe.get_doc("SendGrid Settings")
+        if settings.enabled:
+            api_key = settings.get_password("api_key")
+
+            data = {
+                "name": doc.name
+            }
+            headers = {'Content-Type': 'application/json',
+            'Authorization': f'Bearer {api_key}'}
+            url = settings.api_url + "/marketing/lists/" + doc.lead_source_id 
+            
+            response = requests.delete(url,headers=headers)
+            log = create_log(response,request_data=data,resource_type="List")
+            frappe.log_error("status_code",response.status_code)
+            
+            if response.status_code ==204:
+                
+                log.status = "Success"
+                log.api_response = "The delete has been accepted and is processing."
+            elif response.status_code == 200:
+                log.status = "Success"
+                log.api_response = "The delete has been accepted and is processing."
+            
+            else:
+                log.status = "Failed"
+                log.api_response = "delete failed or list does not exist"
+            log.insert()
+                
             
 def create_log(response_object, request_data = {},resource_type=""):
     
