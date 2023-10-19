@@ -126,7 +126,8 @@ doc_events = {
 	# }
     "Lead Source": {
         "after_insert": "sendgrid_integration.utils.create_list",
-        "on_trash": "sendgrid_integration.utils.delete_list"
+        "on_trash": "sendgrid_integration.utils.delete_list",
+        # "on_update" : "sendgrid_integration.utils.update_list"
     }
 }
 
