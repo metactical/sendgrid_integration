@@ -1,0 +1,63 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-10-26 23:07:21.620889",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "custom_field_name",
+  "custom_field_type",
+  "custom_field_id"
+ ],
+ "fields": [
+  {
+   "description": "field name should be lowercase multiwords are separated by underscore\nExample Contact Name is written as contact_name",
+   "fieldname": "custom_field_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Custom Field Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "custom_field_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Custom Field Type",
+   "options": "Text\nNumber\nDate",
+   "reqd": 1
+  },
+  {
+   "description": "ID returned by sendgrid",
+   "fieldname": "custom_field_id",
+   "fieldtype": "Data",
+   "label": "Custom Field ID",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-10-26 23:25:55.808468",
+ "modified_by": "Administrator",
+ "module": "Sendgrid Integration",
+ "name": "SendGrid Custom Fields",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

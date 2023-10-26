@@ -135,3 +135,33 @@ def create_contacts(doc, event):
                 log.api_response = json.dumps(response.json(),indent=4)
             log.insert()
             frappe.db.commit()
+            
+
+def create_custom_field(doc,event):
+    if doc.custom_field_id: #indicates that this custom field  is already existing
+        return
+    settings = frappe.get_doc("SendGrid Settings")
+    if settings.enabled:
+        api_key = settings.get_password("api_key")
+
+        data = {"name": doc.custom_field_name, "field_type": doc.custom_field_type}
+        
+        headers = {'Content-Type': 'application/json',
+        'Authorization': f'Bearer {api_key}'}
+        url = settings.api_url + "/marketing/field_definitions"
+        
+        response = requests.post(url,json=data,headers=headers)
+    
+        #create a send grid log
+        log = create_log(response,request_data=data,resource_type="Custom Fields")
+        if response.status_code == 200:
+            response_data = response.json()
+            doc.custom_field_id = response_data["id"]
+            log.status = "Success"
+            log.api_response = json.dumps(response.json(),indent=4)
+            doc.save()
+        else:
+            log.status = "Failed"
+            log.api_response = json.dumps(response.json(),indent=4)
+        log.insert()
+        frappe.db.commit()

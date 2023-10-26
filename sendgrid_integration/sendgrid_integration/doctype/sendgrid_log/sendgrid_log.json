@@ -40,7 +40,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Resource Type",
-   "options": "\nContact\nList\nEmail"
+   "options": "\nContact\nList\nEmail\nCustom Fields"
   },
   {
    "description": "ID given to send grid api calls that are asynchronous",
@@ -58,7 +58,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-26 10:09:19.030307",
+ "modified": "2023-10-26 23:31:28.685481",
  "modified_by": "Administrator",
  "module": "Sendgrid Integration",
  "name": "SendGrid Log",

@@ -131,6 +131,9 @@ doc_events = {
     "Customer": {
         "on_update" : "sendgrid_integration.utils.create_contacts"
 		
+	},
+    "SendGrid Custom Fields" : {
+		"after_insert" : "sendgrid_integration.utils.create_custom_field"
 	}
 }
 
@@ -138,9 +141,15 @@ doc_events = {
 # ---------------
 
 scheduler_events = {
-	"*/15 * * * *": [
+    "cron": {
+		"*/5 * * * *": [
+			"sendgrid_integration.tasks.update_logs"
+		],
+	},
+    "all" : [
 		"sendgrid_integration.tasks.update_logs"
-	],
+	]
+	
 	# "daily": [
 	# 	"sendgrid_integration.tasks.daily"
 	# ],

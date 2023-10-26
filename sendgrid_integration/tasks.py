@@ -3,7 +3,7 @@ import requests , json
 
 def update_logs():
     """update logs for send grid api that are asynchronous"""
-    
+    frappe.log_error("called me")
     frappe.enqueue(update_log, queue='long', timeout=600)  # timeout is optional
     
 
