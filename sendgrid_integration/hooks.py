@@ -127,30 +127,33 @@ doc_events = {
     "Lead Source": {
         "after_insert": "sendgrid_integration.utils.create_list",
         "on_trash": "sendgrid_integration.utils.delete_list",
-        # "on_update" : "sendgrid_integration.utils.update_list"
-    }
+    },
+    "Customer": {
+        "on_update" : "sendgrid_integration.utils.create_contacts"
+		
+	}
 }
 
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-#	"all": [
-#		"sendgrid_integration.tasks.all"
-#	],
-#	"daily": [
-#		"sendgrid_integration.tasks.daily"
-#	],
-#	"hourly": [
-#		"sendgrid_integration.tasks.hourly"
-#	],
-#	"weekly": [
-#		"sendgrid_integration.tasks.weekly"
-#	],
-#	"monthly": [
-#		"sendgrid_integration.tasks.monthly"
-#	],
-# }
+scheduler_events = {
+	"*/15 * * * *": [
+		"sendgrid_integration.tasks.update_logs"
+	],
+	# "daily": [
+	# 	"sendgrid_integration.tasks.daily"
+	# ],
+	# "hourly": [
+	# 	"sendgrid_integration.tasks.hourly"
+	# ],
+	# "weekly": [
+	# 	"sendgrid_integration.tasks.weekly"
+	# ],
+	# "monthly": [
+	# 	"sendgrid_integration.tasks.monthly"
+	# ],
+}
 
 # Testing
 # -------

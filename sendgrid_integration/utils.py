@@ -104,4 +104,34 @@ def create_log(response_object, request_data = {},resource_type=""):
     })
     
     return log  
+
+
+def create_contacts(doc, event):
+    """create contacts on sendgrid"""
+    data = {}
     
+    for contact_doc in doc.custom_lead_source_table:
+        data["list_ids"] = [contact_doc.get("lead_source_id")]
+        data["contacts"] = [{"email":contact_doc.get("contact_email"),
+                             "first_name" : doc.get("customer_name"),
+                             "phone_number":contact_doc.get("contact_phone")}]
+        settings = frappe.get_doc("SendGrid Settings")
+        if settings.enabled:
+            api_key = settings.get_password("api_key")
+
+            headers = {'Content-Type': 'application/json',
+            'Authorization': f'Bearer {api_key}'}
+            url = settings.api_url + "/marketing/contacts"
+            
+            response = requests.put(url,json=data,headers=headers)
+            log = create_log(response,request_data=data,resource_type="Contact")
+            if response.status_code == 202:
+                response_data = response.json()
+                log.job_id = response_data["job_id"]
+                log.status = "Processing"
+                log.api_response = json.dumps(response.json(),indent=4)
+            else:
+                log.status = "Failed"
+                log.api_response = json.dumps(response.json(),indent=4)
+            log.insert()
+            frappe.db.commit()

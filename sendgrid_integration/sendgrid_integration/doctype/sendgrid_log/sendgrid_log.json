@@ -10,8 +10,10 @@
  "field_order": [
   "request_data",
   "api_response",
+  "job_response",
   "status",
-  "resource_type"
+  "resource_type",
+  "job_id"
  ],
  "fields": [
   {
@@ -30,7 +32,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "\nSuccess\nFailed\nPending"
+   "options": "\nSuccess\nFailed\nPending\nProcessing"
   },
   {
    "fieldname": "resource_type",
@@ -39,11 +41,24 @@
    "in_standard_filter": 1,
    "label": "Resource Type",
    "options": "\nContact\nList\nEmail"
+  },
+  {
+   "description": "ID given to send grid api calls that are asynchronous",
+   "fieldname": "job_id",
+   "fieldtype": "Data",
+   "label": "Job ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "job_response",
+   "fieldtype": "Code",
+   "label": "Job Response",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-18 12:43:45.563999",
+ "modified": "2023-10-26 10:09:19.030307",
  "modified_by": "Administrator",
  "module": "Sendgrid Integration",
  "name": "SendGrid Log",
