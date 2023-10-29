@@ -8,7 +8,7 @@ def create_list(doc,event):
     if doc.lead_source_id: #indicates that this list  is already existing
         return
     settings = frappe.get_doc("SendGrid Settings")
-    if settings.enabled:
+    if settings.enabled and doc.create_as_list_on_sendgrid:
         api_key = settings.get_password("api_key")
 
         data = {

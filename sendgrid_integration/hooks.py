@@ -141,12 +141,7 @@ doc_events = {
 # ---------------
 
 scheduler_events = {
-    "cron": {
-		"*/5 * * * *": [
-			"sendgrid_integration.tasks.update_logs"
-		],
-	},
-    "all" : [
+    "daily" : [
 		"sendgrid_integration.tasks.update_logs"
 	]
 	

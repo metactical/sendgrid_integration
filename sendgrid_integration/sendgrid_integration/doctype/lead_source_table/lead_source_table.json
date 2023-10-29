@@ -11,6 +11,7 @@
   "lead_source_id",
   "contact_email",
   "contact_phone",
+  "is_subscribed",
   "subscription_date",
   "subscription_method",
   "is_spam",
@@ -77,12 +78,19 @@
    "fieldtype": "Data",
    "label": "Lead Source ID",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_subscribed",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Is Subscribed"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-10-26 22:39:55.068847",
+ "modified": "2023-10-29 22:52:06.879629",
  "modified_by": "Administrator",
  "module": "Sendgrid Integration",
  "name": "Lead Source Table",
