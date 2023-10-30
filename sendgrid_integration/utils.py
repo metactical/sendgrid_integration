@@ -152,8 +152,10 @@ def create_contacts(doc, event,retry_data={}):
             for contact_doc in doc.custom_lead_source_table:
                 data["list_ids"] = [contact_doc.get("lead_source_id")]
                 data["contacts"] = [{"email":contact_doc.get("contact_email"),
-                                    "first_name" : doc.get("customer_name"),
-                                    "phone_number":contact_doc.get("contact_phone")}]
+                                    "first_name" : doc.get("first_name","") or doc.get("customer_name",""),
+                                    "last_name": doc.get("last_name",""),
+                                    "phone_number":contact_doc.get("contact_phone"),
+                                    "city":doc.get("territory")}]
                 
                 response = requests.put(url,json=data,headers=headers)
                 log = create_log(response,request_data=data,resource_type="Contact")
