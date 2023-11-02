@@ -1,6 +1,10 @@
 import frappe
 import os, shutil
 
+
+def after_install():
+    replace_app_py()
+
 def replace_app_py():
     """replace the default app.py in the frappe
         to fix the issue with when request data from api is not a dict 
