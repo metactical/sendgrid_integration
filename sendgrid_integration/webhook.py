@@ -8,7 +8,7 @@ def handle_sendgrid(*args,**kwargs):
         email_dict = {"email_dict":email_list}
         frappe.enqueue(process_sendgrid_event,queue="default",email_dict=email_dict)
         
-        frappe.local.response['code'] = 200
+        frappe.local.response['http_status_code'] = 200
         frappe.local.response['message'] = "Webhook received and processed successfully"
         
  
