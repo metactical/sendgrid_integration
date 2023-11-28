@@ -2,7 +2,6 @@
  "actions": [],
  "allow_rename": 1,
  "creation": "2023-10-14 07:44:42.464288",
- "default_view": "List",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -14,6 +13,7 @@
  ],
  "fields": [
   {
+   "default": "https://api.sendgrid.com/v3/",
    "fieldname": "api_url",
    "fieldtype": "Data",
    "label": "API URL"
@@ -37,7 +37,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-10-18 10:39:58.381906",
+ "modified": "2023-11-28 11:21:25.349646",
  "modified_by": "Administrator",
  "module": "Sendgrid Integration",
  "name": "SendGrid Settings",
@@ -55,6 +55,5 @@
   }
  ],
  "sort_field": "modified",
- "sort_order": "DESC",
- "states": []
+ "sort_order": "DESC"
 }
