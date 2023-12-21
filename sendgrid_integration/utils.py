@@ -149,13 +149,38 @@ def create_contacts(doc, event,retry_data={}):
                 return {"status" :"Failed",
                 "api_response" : json.dumps(response.json(),indent=4)}
         else:
+            #get address document using linked customer
+            address_ = frappe.db.get_value("Dynamic Link",{"link_doctype":"Customer","parenttype":"Address",
+                                            "link_name":doc.name},"parent")
+            address_doc = {}
+            if address_:
+                address_doc = frappe.get_doc("Address",address_)
+                
+                
+                #get custom_field id for is_subscribed
+            custom_field_id = frappe.db.get_value("SendGrid Custom Fields",{"custom_field_name":"is_subscribed"},"custom_field_id")
+            data['contacts'] = []
             for contact_doc in doc.custom_lead_source_table:
+                #get address doc for the contact
                 data["list_ids"] = [contact_doc.get("lead_source_id")]
-                data["contacts"] = [{"email":contact_doc.get("contact_email"),
-                                    "first_name" : doc.get("first_name","") or doc.get("customer_name",""),
-                                    "last_name": doc.get("last_name",""),
-                                    "phone_number":contact_doc.get("contact_phone"),
-                                    "city":doc.get("territory")}]
+                contact_dict = {
+                                        "email":contact_doc.get("contact_email"),
+                                        "first_name" : doc.get("first_name","") or doc.get("customer_name",""),
+                                        "last_name": doc.get("last_name",""),
+                                        "phone_number":contact_doc.get("contact_phone"),
+                                        "city":address_doc.get("city"),
+                                        "address_line_1" : address_doc.get("address_line1"),
+                                        "address_line_2" : address_doc.get("address_line2"),
+                                        "country" : address_doc.get("country"),
+                                        "state_province_region": address_doc.get("state"),
+                                        "postal_code": address_doc.get("pincode"),
+                                        
+                                        }
+                                    
+                if custom_field_id:
+                    contact_dict.update({"custom_fields": {custom_field_id : str(bool(contact_doc.get("is_subscribed")))}})
+                
+                data["contacts"].append(contact_dict)
                 
                 response = requests.put(url,json=data,headers=headers)
                 log = create_log(response,request_data=data,resource_type="Contact")
