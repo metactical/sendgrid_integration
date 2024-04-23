@@ -2,33 +2,29 @@ import frappe
 from frappe.utils import cint, get_site_name, sanitize_html
 import os
 from werkzeug.exceptions import HTTPException, NotFound
+from six import iteritems
 
 
 _site = None
 _sites_path = os.environ.get("SITES_PATH", ".")
 
+
 def custom_init_request(request):
-	frappe.log_error("Hello")
 	frappe.local.request = request
 	frappe.local.is_ajax = frappe.get_request_header("X-Requested-With") == "XMLHttpRequest"
 
 	site = _site or request.headers.get("X-Frappe-Site-Name") or get_site_name(request.host)
-	frappe.init(site=site, sites_path=_sites_path, force=True)
+	frappe.init(site=site, sites_path=_sites_path)
 
 	if not (frappe.local.conf and frappe.local.conf.db_name):
 		# site does not exist
 		raise NotFound
 
-	if frappe.local.conf.maintenance_mode:
+	if frappe.local.conf.get("maintenance_mode"):
 		frappe.connect()
-		if frappe.local.conf.allow_reads_during_maintenance:
-			setup_read_only_mode()
-		else:
-			raise frappe.SessionStopped("Session Stopped")
+		raise frappe.SessionStopped("Session Stopped")
 	else:
 		frappe.connect(set_admin_as_user=False)
-
-	request.max_content_length = cint(frappe.local.conf.get("max_file_size")) or 10 * 1024 * 1024
 
 	custom_make_form_dict(request)
 
@@ -42,6 +38,7 @@ def custom_init_request(request):
 
 def custom_make_form_dict(request):
 	import json
+
 	request_data = request.get_data(as_text=True)
 	if "application/json" in (request.content_type or "") and request_data:
 		args = json.loads(request_data)
@@ -52,11 +49,16 @@ def custom_make_form_dict(request):
 
 	if isinstance(args,list):
 		args = {"request_data": args} #specifically for sendgrid, which sends a list of dicts
-  
-	if not isinstance(args, dict):
-		frappe.throw(_("Invalid request arguments"))
 
-	frappe.local.form_dict = frappe._dict(args)
+	if not isinstance(args, dict):
+		frappe.throw("Invalid request arguments")
+
+	try:
+		frappe.local.form_dict = frappe._dict(
+			{k: v[0] if isinstance(v, (list, tuple)) else v for k, v in iteritems(args)}
+		)
+	except IndexError:
+		frappe.local.form_dict = frappe._dict(args)
 
 	if "_" in frappe.local.form_dict:
 		# _ is passed by $.ajax so that the request is not cached by the browser. So, remove _ from form_dict
