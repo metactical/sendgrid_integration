@@ -64,7 +64,7 @@ app_license = "MIT"
 # ------------
 
 # before_install = "sendgrid_integration.install.before_install"
-after_install = "sendgrid_integration.install.after_install"
+# after_install = "sendgrid_integration.install.after_install"
 
 # Uninstallation
 # ------------
